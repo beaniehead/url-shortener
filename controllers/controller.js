@@ -1,5 +1,5 @@
 exports.urlparse = (req,res) =>{
 
 
-res.send("Hello");
+res.send(req);
 }

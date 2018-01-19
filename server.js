@@ -5,8 +5,20 @@
 const fs = require('fs');
 const express = require('express');
 const routes = require('./routes/index.js');
+const mongoose = require('mongoose');
 
 const app = express();
+
+require('dotenv').config({ path: 'variables.env' });
+
+// Connect to our Database and handle any bad connections
+mongoose.connect(process.env.DATABASE, (err)=>{
+if(!err) console.log("connected");
+});
+mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
+mongoose.connection.on('error', (err) => {
+  console.error(`🙅 🚫 🙅 🚫 🙅 🚫 🙅 🚫 → ${err.message}`);
+});
 
 if (!process.env.DISABLE_XORIGIN) {
   app.use((req, res, next)=> {
