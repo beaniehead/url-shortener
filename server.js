@@ -2,38 +2,44 @@
 // where your node app starts
 
 // init project
-var express = require('express');
-var app = express();
+const fs = require('fs');
+const express = require('express');
+const routes = require('./routes/index.js');
 
-// we've started you off with Express, 
-// but feel free to use whatever libs or frameworks you'd like through `package.json`.
+const app = express();
 
-// http://expressjs.com/en/starter/static-files.html
-app.use(express.static('public'));
+if (!process.env.DISABLE_XORIGIN) {
+  app.use((req, res, next)=> {
+    var allowedOrigins = ['https://narrow-plane.gomix.me', 'https://www.freecodecamp.com'];
+    var origin = req.headers.origin || '*';
+    if(!process.env.XORIG_RESTRICT || allowedOrigins.indexOf(origin) > -1){
+         console.log(origin);
+         res.setHeader('Access-Control-Allow-Origin', origin);
+         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    }
+    next();
+  });
+}
 
-// http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function (request, response) {
-  response.sendFile(__dirname + '/views/index.html');
+app.use('/public', express.static(process.cwd() + '/public'));
+
+app.use('/', routes);
+
+// Respond not found to all the wrong routes
+app.use((req, res, next)=>{
+  res.status(404);
+  res.type('txt').send('Not found');
 });
 
-app.get("/dreams", function (request, response) {
-  response.send(dreams);
-});
+// Error Middleware
+app.use((err, req, res, next)=> {
+  if(err) {
+    res.status(err.status || 500)
+      .type('txt')
+      .send(err.message || 'SERVER ERROR');
+  }  
+})
 
-// could also use the POST body instead of query string: http://expressjs.com/en/api.html#req.body
-app.post("/dreams", function (request, response) {
-  dreams.push(request.query.dream);
-  response.sendStatus(200);
-});
-
-// Simple in-memory store for now
-var dreams = [
-  "Find and count some sheep",
-  "Climb a really tall mountain",
-  "Wash the dishes"
-];
-
-// listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
+app.listen(process.env.PORT,()=> {
+  console.log('Node.js listening ...');
 });
