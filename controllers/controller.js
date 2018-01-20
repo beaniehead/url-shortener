@@ -1,6 +1,6 @@
 const validateURL = require("valid-url");
 const url = require("url");
-const mongodb= require('mongodb');
+const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 
 exports.urlvalidate = (req, res, next) => {
@@ -14,6 +14,23 @@ exports.urlvalidate = (req, res, next) => {
   };
 };
 exports.urlshorten = (req, res) => {
+  const url = process.env.DATABASE;
+  
+  MongoClient.connect(url,(err,db)=>{
+  assert.equal(null,err);
+    console.log("Successfully connected to db");
+    
+    db.close();
+  
+  });
+  
+  
+  
+  
+  
+  
+  
+  
   // // Connect to our Database and handle any bad connections
   // mongoose.connect(process.env.DATABASE, (err) => {
   //   if (!err) console.log("connected");
