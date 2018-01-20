@@ -15,9 +15,11 @@ exports.urlvalidate = (req, res, next) => {
   };
 };
 exports.urlshorten = (req, res) => {
+  let exists = false;
   const url = process.env.DATABASE;
   MongoClient.connect(url, (err, db) => {
     assert.equal(null, err);
+    if (err) log err;
     console.log("Successfully connected to db");
     const dbo = db.db("url-shortener");
     //logic - check to see if entered url exists in database
@@ -29,17 +31,12 @@ exports.urlshorten = (req, res) => {
     }).toArray((err, docs) => {
       if (err) throw err;
       //if the document does exist return the object to the user
-      
+      exists = true;
       //if the document doesn't exist - 
       
-      // 1. create a new document and add to db with the entered url as the olrUrl
-      // 2. create a unique suffix based on the new document id
-      // 3. add newUrl to the above document.
+       
       
-      // or 
-      
-      
-      // 1. generate a suffix for new url
+      // 1. generate a suffix for new url (using a hash of the timestamp)
       // 2. creat object with new url and old url
       // 3. add this to db as new databse
       
