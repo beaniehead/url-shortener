@@ -8,6 +8,6 @@ router.get("/", (req,res)=>{
 res.sendFile(process.cwd() + "/views/index.html");
 });
 
-router.get("/new/:url", controller.urlparse);
+router.get("/new/*", controller.urlparse);
 
 module.exports = router;
