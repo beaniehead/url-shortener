@@ -23,19 +23,22 @@ exports.urlshorten = (req, res) => {
     if (err) throw err;
     console.log("Successfully connected to db");
     const dbo = db.db("url-shortener");
-    //logic - check to see if entered url exists in database
+    // Check to see if entered url exists in database
     const urls = dbo.collection("urls");
-    urls.find({
+    const results = urls.find({
       oldUrl: {
         $eq: res.locals.urii
       }
     }).toArray((err, docs) => {
       if (err) throw err;
       //if the document does exist return the object to the user
-      //function getData(){}
+      console.log(docs[0]);
       exists = true;
+      return docs[0];
       //if the document doesn't exist - 
     });
+    console.log(results);
+    
   });
   res.send(res.locals.valid);
 };
