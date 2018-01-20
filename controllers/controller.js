@@ -1,13 +1,16 @@
 const validateURL = require("valid-url");
 const url = require("url");
-exports.urlparse = (req, res) => {
-   const urii = req.params.url;
-  
-  
+exports.urlvalidate = (req, res, next) => {
+  const urii = req.params[0];
   const valid = validateURL.isHttpsUri(urii);
-
-  console.log(req.params);
-  if(!valid){
-  res.send("Invalid URL")}else{res.send(valid)};
-  
-}
+  res.locals.valid = valid;
+  if (!valid) {
+    res.send(`${urii} is an invalid URL`)
+  } else {
+    next();
+  };
+};
+exports.urlshorten = (req, res) => {
+  console.log("Next");
+  res.send(res.locals.valid);
+};
