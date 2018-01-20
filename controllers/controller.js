@@ -2,8 +2,6 @@ const validateURL = require("valid-url");
 const MongoClient = require("mongodb").MongoClient;
 const assert = require("assert");
 const Hashids = require("hashids");
-
-
 exports.urlvalidate = ((req, res, next) => {
   const urii = req.params[0];
   const valid = validateURL.isHttpsUri(urii);
@@ -15,17 +13,15 @@ exports.urlvalidate = ((req, res, next) => {
     next();
   }
 });
-
 exports.urlshorten = ((req, res) => {
- const url = process.env.DATABASE;
-    // Connect to DB
+  const url = process.env.DATABASE;
+  // Connect to DB
   MongoClient.connect(url, (err, db) => {
-    if (err) throw err;    
+    if (err) throw err;
     console.log("Successfully connected to db");
     const dbo = db.db("url-shortener");
-   
     const urlsCol = dbo.collection("urls");
- // Check to see if entered url exists in database
+    // Check to see if entered url exists in database
     function createHash(id) {
       const hashids = new Hashids();
       return hashids.encode(id);
@@ -58,10 +54,10 @@ exports.urlshorten = ((req, res) => {
         $eq: res.locals.urii
       }
     }, {
-      projection:
-      { _id: 0 }
-    })
-      .toArray((err, doc) => {
+      projection: {
+        _id: 0
+      }
+    }).toArray((err, doc) => {
       if (err) throw err;
       console.log(doc);
       //if the document does exist return the object to the user
@@ -73,47 +69,37 @@ exports.urlshorten = ((req, res) => {
       }
       db.close();
     });
-
   });
-  
 });
-
-exports.redirect = ((req,res)=>{
+exports.redirect = ((req, res) => {
   const newUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-// const newUrl = 'http://shorts.glitch.me/6XELjvA6z';
-  console.log(typeof newUrl);
-const url = process.env.DATABASE;
+console.log(newUrl);
+  const url = process.env.DATABASE;
   //connect to Database
-  MongoClient.connect(url, (err, db)=>{
-  if(err) throw err;
+  MongoClient.connect(url, (err, db) => {
+    if (err) throw err;
     console.log("Connected");
-  const dbo = db.db("url-shortener");   
-  const urlsCol = dbo.collection("urls");  
-    
-  urlsCol.find({
-  newUrl: {
+    const dbo = db.db("url-shortener");
+    const urlsCol = dbo.collection("urls");
+   urlsCol.find({
+      newUrl: {
         $eq: newUrl
       }
-  })
-    .toArray((err, doc)=>{
-    if(err) throw err;
-  console.log(doc[0]);
-  if(doc[0]){
-  console.log(doc[0])
-  }
-    db.close();
-  });
-    
-    urlsCol.find().limit(1);
-    
+    }, {
+      projection: {
+        _id: 0
+      }
+    }).toArray((err, doc) => {
+      if (err) throw err;
+      if (doc) {
+        console.log(doc[0])
+      }
+      db.close();
+    });
   });
   //find document which newUrl matches the newUrl
-  
-    //if document matches, return oldUrl from document
-  
-      //redirect to this documnet
-    
-    //if no match, close db connection and display 404 etc on page
-  
+  //if document matches, return oldUrl from document
+  //redirect to this documnet
+  //if no match, close db connection and display 404 etc on page
   res.send(newUrl);
 });
