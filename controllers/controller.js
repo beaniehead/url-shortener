@@ -2,7 +2,8 @@ const validateURL = require("valid-url");
 const MongoClient = require("mongodb").MongoClient;
 const assert = require("assert");
 const Hashids = require("hashids");
-exports.urlvalidate = (req, res, next) => {
+
+exports.urlvalidate = ((req, res, next) => {
   const urii = req.params[0];
   const valid = validateURL.isHttpsUri(urii);
   res.locals.valid = valid;
@@ -12,8 +13,9 @@ exports.urlvalidate = (req, res, next) => {
     res.locals.urii = urii;
     next();
   }
-}
-exports.urlshorten = (req, res) => {
+});
+
+exports.urlshorten = ((req, res) => {
   let response = 0;
   const url = process.env.DATABASE;
   // Connect to DB
@@ -69,4 +71,9 @@ exports.urlshorten = (req, res) => {
       db.close();
     });
   });
-};
+});
+
+exports.redirect = ((req,res)=>{
+  console.log(req.protocol);
+  res.send("Hello");
+});
