@@ -1,4 +1,4 @@
-const parse = require("url-parse");
+const validateURL = require("valid-url");
 
 exports.urlparse = (req,res) =>{
 
