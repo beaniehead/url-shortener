@@ -1,7 +1,8 @@
 const validateURL = require("valid-url");
 exports.urlparse = (req, res) => {
-  const enteredUrl = req.params.url;
-const dave = { if(validateURL.isHttpUri(enteredUrl)) return true;
+  // const urii = req.params.url;
+  const urii = "https://www.google.com";
   
-  res.send(req.params.url);
+           if(validateURL.isHttpUri(urii)) {console.log( true)};
+  res.send("Dave");
 }
