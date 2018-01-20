@@ -1,12 +1,7 @@
 const validateURL = require("valid-url");
 exports.urlparse = (req, res) => {
+  const enteredUrl = req.params.url;
+const dave = { if(validateURL.isHttpUri(enteredUrl)) return true;
   
-    if (validateURL.isUri(req.params.url)) {
-    return req.params.url;
-    } else {
-    return "Is not valid URL";
-    }
-
-  }
-  res.send(url1);
+  res.send(req.params.url);
 }
