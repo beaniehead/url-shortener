@@ -2,6 +2,7 @@ const validateURL = require("valid-url");
 const url = require("url");
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
+const ObjectID = require("mongodb").ObjectId;
 
 exports.urlvalidate = (req, res, next) => {
   
@@ -28,12 +29,13 @@ exports.urlshorten = (req, res) => {
     urls.find({oldUrl:{$eq:res.locals.urii}})
     .toArray((err,docs)=>{
     if (err) throw err;
-      console.log(typeoJSON.stringify(docs[0]["_id"].length));
+      console.log(docs[0]["_id"]);
+      console.log(Date.now());
     });
     
     //if it doesn't, then generate a url to pir
     const base = "https://shorts.glitch.me/"
-    console.log(Date.now());
+    
     });
      
   res.send(res.locals.valid);
