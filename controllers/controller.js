@@ -2,7 +2,7 @@ const validateURL = require("valid-url");
 const url = require("url");
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
-const Hashids = require("hashid");
+const Hashids = require("hashids");
 
 exports.urlvalidate = (req, res, next) => {
   
@@ -29,10 +29,11 @@ exports.urlshorten = (req, res) => {
     urls.find({oldUrl:{$eq:res.locals.urii}})
     .toArray((err,docs)=>{
     if (err) throw err;
-      const id = docs[0]["_id"];
-      console.log(id);
-      
-      console.log(Date.now());
+      const id = JSON.stringify(docs[0]["_id"]);
+      console.log(typeof id);
+      const hashids = new Hashids();
+      const hash = hashids.encodeHex(id);
+      console.log(`Hash:${hash}`);
       
     });
     
