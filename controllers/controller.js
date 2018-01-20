@@ -10,6 +10,7 @@ exports.urlvalidate = (req, res, next) => {
   if (!valid) {
     res.send(`${urii} is an invalid URL`)
   } else {
+    res.locals.urii = urii;
     next();
   };
 };
@@ -21,6 +22,9 @@ exports.urlshorten = (req, res) => {
     console.log("Successfully connected to db");
     const dbo = db.db("url-shortener");
     //logic - check to see if entered url exists in database
+    const urls = db.collection("urls");
+    urls.find({
+    oldUrl:res.loca)
     
     //if it doesn't, then generate a url to pir
       db.close();
