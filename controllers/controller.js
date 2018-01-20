@@ -33,7 +33,8 @@ exports.urlshorten = ((req, res) => {
     };
 
     function disexists(uri) {
-      const base = "https://shorts.glitch.me/";
+      //const base = "https://shorts.glitch.me/";
+      const base = `https://${req.get('host')}/`;
       //create hash as suffix for new url
       const suffix = createHash(Date.now());
       const newUrl = `${base}${suffix}`;
@@ -72,8 +73,10 @@ exports.urlshorten = ((req, res) => {
   });
 });
 exports.redirect = ((req, res) => {
-  const newUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-console.log(newUrl);
+  //get current URL = included https instead of req.protocl as this mistakenly return http
+// included host instead of static address in case in case app name changes
+  const newUrl = `https://${req.get('host')}${req.originalUrl}`;
+
   const url = process.env.DATABASE;
   //connect to Database
   MongoClient.connect(url, (err, db) => {
@@ -87,11 +90,15 @@ console.log(newUrl);
       }
     }, {
       projection: {
-        _id: 0
+        _id: 0,
+        oldUrl:0
       }
     }).toArray((err, doc) => {
       if (err) throw err;
       if (doc) {
+        const redirectURL = doc[0].newUrl;
+      // res.redirect(doc[0]);
+
         console.log(doc[0])
       }
       db.close();
