@@ -15,7 +15,7 @@ exports.urlvalidate = (req, res, next) => {
   };
 };
 exports.urlshorten = (req, res) => {
-  let exists = false;
+  
   const url = process.env.DATABASE;
   // Connect to DB
   MongoClient.connect(url, (err, db) => {
@@ -25,19 +25,26 @@ exports.urlshorten = (req, res) => {
     const dbo = db.db("url-shortener");
     // Check to see if entered url exists in database
     const urls = dbo.collection("urls");
-    const results = urls.find({
+    
+    function exists(doc){
+    console.log(`Document exists! See: ${JSON.stringify(doc)}`);
+    }
+    
+    urls.find({
       oldUrl: {
         $eq: res.locals.urii
       }
     }).toArray((err, docs) => {
       if (err) throw err;
       //if the document does exist return the object to the user
-      console.log(docs[0]);
-      exists = true;
-      return docs[0];
+    
+      if(docs[0]){
+      exists(docs[0]);
+      }
+      
       //if the document doesn't exist - 
     });
-    console.log(results);
+  
     
   });
   res.send(res.locals.valid);
