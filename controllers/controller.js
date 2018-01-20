@@ -22,12 +22,16 @@ exports.urlshorten = (req, res) => {
     console.log("Successfully connected to db");
     const dbo = db.db("url-shortener");
     //logic - check to see if entered url exists in database
-    const urls = db.collection("urls");
-    urls.find({
-    oldUrl:res.loca)
+    const urls = dbo.collection("urls");
+    console.log(res.locals.urii);
+    urls.find({oldUrl:{$eq:res.locals.urii}})
+    .toArray((err,docs)=>{
+    if (err) throw err;
+      console.log(docs);
+    });
     
     //if it doesn't, then generate a url to pir
-      db.close();
+      
     });
      
   res.send(res.locals.valid);
