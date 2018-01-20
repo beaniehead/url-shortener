@@ -2,7 +2,7 @@ const validateURL = require("valid-url");
 const MongoClient = require("mongodb").MongoClient;
 const assert = require("assert");
 const Hashids = require("hashids");
-const url = process.env.DATABASE;
+
 
 exports.urlvalidate = ((req, res, next) => {
   const urii = req.params[0];
@@ -17,6 +17,7 @@ exports.urlvalidate = ((req, res, next) => {
 });
 
 exports.urlshorten = ((req, res) => {
+ const url = process.env.DATABASE;
     // Connect to DB
   MongoClient.connect(url, (err, db) => {
     if (err) throw err;    
@@ -36,7 +37,7 @@ exports.urlshorten = ((req, res) => {
     };
 
     function disexists(uri) {
-      const base = "https://shortz.glitch.me/";
+      const base = "https://shorts.glitch.me/";
       //create hash as suffix for new url
       const suffix = createHash(Date.now());
       const newUrl = `${base}${suffix}`;
@@ -78,23 +79,29 @@ exports.urlshorten = ((req, res) => {
 });
 
 exports.redirect = ((req,res)=>{
-  const newUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-  console.log(newUrl);
-  
+  const newUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+// const newUrl = 'http://shorts.glitch.me/6XELjvA6z';
+  console.log(typeof newUrl);
+const url = process.env.DATABASE;
   //connect to Database
   MongoClient.connect(url, (err, db)=>{
   if(err) throw err;
+    console.log("Connected");
   const dbo = db.db("url-shortener");   
   const urlsCol = dbo.collection("urls");  
     
   urlsCol.find({
-  newUrl
-  }, {projection:{_id:0, "newUrl":0, "oldUrl":1}})
+  newUrl: {
+        $eq: newUrl
+      }
+  })
     .toArray((err, doc)=>{
-  
+    if(err) throw err;
+  console.log(doc[0]);
   if(doc[0]){
-  console.log(doc)
+  console.log(doc[0])
   }
+    db.close();
   });
     
     urlsCol.find().limit(1);
