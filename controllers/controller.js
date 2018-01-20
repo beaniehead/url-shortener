@@ -3,9 +3,7 @@ const url = require("url");
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const Hashids = require("hashids");
-
 exports.urlvalidate = (req, res, next) => {
-  
   const urii = req.params[0];
   const valid = validateURL.isHttpsUri(urii);
   res.locals.valid = valid;
@@ -18,29 +16,32 @@ exports.urlvalidate = (req, res, next) => {
 };
 exports.urlshorten = (req, res) => {
   const url = process.env.DATABASE;
-  
-  MongoClient.connect(url,(err,db)=>{
-  assert.equal(null,err);
+  MongoClient.connect(url, (err, db) => {
+    assert.equal(null, err);
     console.log("Successfully connected to db");
     const dbo = db.db("url-shortener");
     //logic - check to see if entered url exists in database
     const urls = dbo.collection("urls");
-    
-    urls.find({oldUrl:{$eq:res.locals.urii}})
-    .toArray((err,docs)=>{
-    if (err) throw err;
-      const id = JSON.stringify(docs[0]["_id"]);
-      console.log(typeof id);
-      const hashids = new Hashids();
-      const hash = hashids.encodeHex(id);
-      console.log(`Hash:${hash}`);
-      
+    urls.find({
+      oldUrl: {
+        $eq: res.locals.urii
+      }
+    }).toArray((err, docs) => {
+      if (err) throw err;
+      const id = (docs[0]["_id"]).toString();
+      if (docs === null) {
+        //create matching pair and add to db
+        function createHash(id) {
+          const hashids = new Hashids();
+          return hashids.encodeHex(id);
+        };
+        const base = "https://shorts.glitch.me/"
+         const suffix = createHash(id);
+        console.log(suffix)
+      } else {
+        // return old and new url as json object to user
+      }
     });
-    
-    //if it doesn't, then generate a url to pir
-    const base = "https://shorts.glitch.me/"
-    
-    });
-     
+  });
   res.send(res.locals.valid);
 };
