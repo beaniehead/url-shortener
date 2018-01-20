@@ -20,6 +20,7 @@ exports.urlshorten = (req, res) => {
   assert.equal(null,err);
     console.log("Successfully connected to db");
     
+    // db.createCollection("urls");
     db.close();
   
   });
