@@ -1,9 +1,8 @@
 const validateURL = require("valid-url");
 const url = require("url");
-const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
-const ObjectID = require("mongodb").ObjectId;
-
+const MongoClient = require("mongodb").MongoClient;
+const assert = require("assert");
+const hashid = require("hashids");
 exports.urlvalidate = (req, res, next) => {
   
   const urii = req.params[0];
@@ -28,9 +27,12 @@ exports.urlshorten = (req, res) => {
     
     urls.find({oldUrl:{$eq:res.locals.urii}})
     .toArray((err,docs)=>{
-    if (err) throw err;
+    if (err) throw err
+      const id = docs[0]["_id"];
+      const hash = new hashid();
       console.log(docs[0]["_id"]);
       console.log(Date.now());
+      
     });
     
     //if it doesn't, then generate a url to pir
