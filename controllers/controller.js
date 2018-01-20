@@ -26,8 +26,23 @@ exports.urlshorten = (req, res) => {
     // Check to see if entered url exists in database
     const urls = dbo.collection("urls");
     
+    function createHash(id) {
+          const hashids = new Hashids();
+          return hashids.encode(id);
+        };
+    
     function exists(doc){
+    //return document to user
     console.log(`Document exists! See: ${JSON.stringify(doc)}`);
+    };
+    
+    function disexists(uri){
+    const base = "https://shorts.glitch.me/";  
+    //create hash as suffix for new url
+    const suffix = createHash(Date.now());
+    const newUrl = `${base}${suffix}`;
+            console.log(newUrl);
+   
     }
     
     urls.find({
@@ -40,6 +55,8 @@ exports.urlshorten = (req, res) => {
     
       if(docs[0]){
       exists(docs[0]);
+      } else {
+      disexists(res.locals.urii);
       }
       
       //if the document doesn't exist - 
