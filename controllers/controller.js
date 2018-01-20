@@ -1,5 +1,4 @@
 const validateURL = require("valid-url");
-// const URL = require("url");
 const MongoClient = require("mongodb").MongoClient;
 const assert = require("assert");
 const Hashids = require("hashids");
@@ -15,6 +14,7 @@ exports.urlvalidate = (req, res, next) => {
   }
 }
 exports.urlshorten = (req, res) => {
+  let response = 0;
   const url = process.env.DATABASE;
   // Connect to DB
   MongoClient.connect(url, (err, db) => {
@@ -23,39 +23,50 @@ exports.urlshorten = (req, res) => {
     console.log("Successfully connected to db");
     const dbo = db.db("url-shortener");
     // Check to see if entered url exists in database
-    const urls = dbo.collection("urls");
+    const urlsCol = dbo.collection("urls");
 
     function createHash(id) {
       const hashids = new Hashids();
       return hashids.encode(id);
     };
+
     function exists(doc) {
       //return document to user
-      console.log(`Document exists! See: ${JSON.stringify(doc)}`);
+      return doc;
     };
+
     function disexists(uri) {
-      const base = "https://shorts.glitch.me/";
+      const base = "https://shortz.glitch.me/";
       //create hash as suffix for new url
       const suffix = createHash(Date.now());
       const newUrl = `${base}${suffix}`;
-      console.log(newUrl);
+      //create new document
+      const docToInsert = {
+        oldUrl: uri,
+        newUrl
+      }
+      //insert document into DB
+      urlsCol.insert(docToInsert, (err, docs) => {
+        if (err) throw err;
+        console.log("INSERTED");
+      });
+      return docToInsert;
     }
-
-    urls.find({
+    urlsCol.find({
       oldUrl: {
         $eq: res.locals.urii
       }
-    }).toArray((err, docs) => {
+    }, {projection:{ _id: 0 }}).toArray((err, docs) => {
       if (err) throw err;
+      console.log(docs);
       //if the document does exist return the object to the user
       if (docs[0]) {
-        // exists(docs[0]);
+        console.log("Doc exists");
+        res.send(exists(docs[0]));
       } else {
-        //disexists(res.locals.urii);
+        res.send(disexists(res.locals.urii));
       }
-      dbo.close();
+      db.close();
     });
-
   });
-  res.send(res.locals.valid);
 };
