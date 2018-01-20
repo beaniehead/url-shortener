@@ -19,14 +19,12 @@ exports.urlvalidate = ((req, res, next) => {
 exports.urlshorten = ((req, res) => {
     // Connect to DB
   MongoClient.connect(url, (err, db) => {
-    if (err) throw err;
-    assert.equal(null, err);
-    
+    if (err) throw err;    
     console.log("Successfully connected to db");
     const dbo = db.db("url-shortener");
-    // Check to see if entered url exists in database
+   
     const urlsCol = dbo.collection("urls");
-
+ // Check to see if entered url exists in database
     function createHash(id) {
       const hashids = new Hashids();
       return hashids.encode(id);
@@ -58,13 +56,17 @@ exports.urlshorten = ((req, res) => {
       oldUrl: {
         $eq: res.locals.urii
       }
-    }, {projection:{ _id: 0 }}).toArray((err, docs) => {
+    }, {
+      projection:
+      { _id: 0 }
+    })
+      .toArray((err, doc) => {
       if (err) throw err;
-      console.log(docs);
+      console.log(doc);
       //if the document does exist return the object to the user
-      if (docs[0]) {
+      if (doc[0]) {
         console.log("Doc exists");
-        res.send(exists(docs[0]));
+        res.send(exists(doc[0]));
       } else {
         res.send(disexists(res.locals.urii));
       }
@@ -81,7 +83,22 @@ exports.redirect = ((req,res)=>{
   
   //connect to Database
   MongoClient.connect(url, (err, db)=>{
-  assert.equal(null,err);
+  if(err) throw err;
+  const dbo = db.db("url-shortener");   
+  const urlsCol = dbo.collection("urls");  
+    
+  urlsCol.find({
+  newUrl
+  }, {projection:{_id:0, "newUrl":0, "oldUrl":1}})
+    .toArray((err, doc)=>{
+  
+  if(doc[0]){
+  console.log(doc)
+  }
+  });
+    
+    urlsCol.find().limit(1);
+    
   });
   //find document which newUrl matches the newUrl
   
