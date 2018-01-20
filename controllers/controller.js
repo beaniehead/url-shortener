@@ -21,25 +21,10 @@ exports.urlshorten = (req, res) => {
     console.log("Successfully connected to db");
     const dbo = db.db("url-shortener");
     //logic - check to see if entered url exists in database
+    
+    //if it doesn't, then generate a url to pir
       db.close();
     });
-    
-  });
-  
-  
-  
-  
-  
-  
-  
-  
-  // // Connect to our Database and handle any bad connections
-  // mongoose.connect(process.env.DATABASE, (err) => {
-  //   if (!err) console.log("connected");
-  // });
-  // mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
-  // mongoose.connection.on('error', (err) => {
-  //   console.error(`🙅 🚫 🙅 🚫 🙅 🚫 🙅 🚫 → ${err.message}`);
-  // });
+     
   res.send(res.locals.valid);
 };
