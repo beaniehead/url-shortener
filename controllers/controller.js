@@ -19,10 +19,11 @@ exports.urlshorten = (req, res) => {
   MongoClient.connect(url,(err,db)=>{
   assert.equal(null,err);
     console.log("Successfully connected to db");
+    const dbo = db.db("url-shortener");
+    //logic - check to see if entered url exists in database
+      db.close();
+    });
     
-    // db.createCollection("urls");
-    db.close();
-  
   });
   
   
