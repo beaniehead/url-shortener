@@ -23,7 +23,7 @@ exports.urlshorten = (req, res) => {
     const dbo = db.db("url-shortener");
     //logic - check to see if entered url exists in database
     const urls = dbo.collection("urls");
-    console.log(res.locals.urii);
+    
     urls.find({oldUrl:{$eq:res.locals.urii}})
     .toArray((err,docs)=>{
     if (err) throw err;
@@ -31,7 +31,8 @@ exports.urlshorten = (req, res) => {
     });
     
     //if it doesn't, then generate a url to pir
-      
+    const base = "https://shorts.glitch.me/"
+    
     });
      
   res.send(res.locals.valid);
