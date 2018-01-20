@@ -1,15 +1,14 @@
 {
-  "name": "url-shortener",
-  "dependencies": {
-    "connect-mongo": "^2.0.1",
-    "dotenv": "4.0.0",
+   "name": "url-shortener",
+   "dependencies": {
     "express": "^4.16.2",
-    "hashids": "^1.1.4",
-    "mongodb": "3.0.1",
+    "dotenv": "4.0.0",
+    "mongodb": "^3.0.1",
+    "connect-mongo": "^2.0.1",
     "mongoose": "^5.0.0",
     "mongoose-mongodb-errors": "0.0.2",
-    "valid-url": "1.,
-    "hashids":"1.1.4"0.9"
+    "valid-url":"1.0.9",
+    "hashids":"1.1.4"
   },
   "main": "server.js",
   "scripts": {
@@ -22,4 +21,5 @@
     "type": "git",
     "url": "https://github.com/beaniehead/url-shortener.git"
   }
+} }
 }
