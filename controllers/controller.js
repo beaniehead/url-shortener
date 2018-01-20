@@ -1,3 +1,5 @@
+const parse = require("url-parse");
+
 exports.urlparse = (req,res) =>{
 
 
