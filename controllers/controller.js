@@ -2,6 +2,7 @@ const validateURL = require("valid-url");
 const MongoClient = require("mongodb").MongoClient;
 const assert = require("assert");
 const Hashids = require("hashids");
+const url = process.env.DATABASE;
 
 exports.urlvalidate = ((req, res, next) => {
   const urii = req.params[0];
@@ -16,12 +17,11 @@ exports.urlvalidate = ((req, res, next) => {
 });
 
 exports.urlshorten = ((req, res) => {
-  let response = 0;
-  const url = process.env.DATABASE;
-  // Connect to DB
+    // Connect to DB
   MongoClient.connect(url, (err, db) => {
-    assert.equal(null, err);
     if (err) throw err;
+    assert.equal(null, err);
+    
     console.log("Successfully connected to db");
     const dbo = db.db("url-shortener");
     // Check to see if entered url exists in database
@@ -70,10 +70,26 @@ exports.urlshorten = ((req, res) => {
       }
       db.close();
     });
+
   });
+  
 });
 
 exports.redirect = ((req,res)=>{
-  console.log(req.protocol);
-  res.send("Hello");
+  const newUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+  console.log(newUrl);
+  
+  //connect to Database
+  MongoClient.connect(url, (err, db)=>{
+  assert.equal(null,err);
+  });
+  //find document which newUrl matches the newUrl
+  
+    //if document matches, return oldUrl from document
+  
+      //redirect to this documnet
+    
+    //if no match, close db connection and display 404 etc on page
+  
+  res.send(newUrl);
 });
