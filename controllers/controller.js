@@ -3,19 +3,19 @@ const MongoClient = require("mongodb").MongoClient;
 const assert = require("assert");
 const Hashids = require("hashids");
 exports.urlvalidate = ((req, res, next) => {
-  //const uriFirst = `https://${req.get('host')}`;
-  //console.log(uriFirst);
-  //const uriSecond = encodeURI(req.originalUrl);
+  const uriFirst = `https://${req.get('host')}/new/`;
+  console.log(uriFirst);
+  const uriSecond = req.originalUrl.slice(5);
+  console.log(uriSecond);
+   //const urii = req.params[0];
+  const urii = `${uriFirst}${uriSecond}`;
   
-   const urii = req.params[0];
-  //const urii = `${uriFirst}${uriSecond}`;
-  
-  const valid = validateURL.isWebUri(urii);
+  const valid = validateURL.isWebUri(uriSecond);
   res.locals.valid = valid;
   if (!valid) {
-    res.send(`${urii} is an invalid URL`)
+    res.send(`${uriSecond} is an invalid URL`)
   } else {
-    res.locals.urii = urii;
+    res.locals.urii = uriSecond;
     next();
   }
 });
@@ -49,11 +49,14 @@ exports.urlshorten = ((req, res) => {
         oldUrl: uri,
         newUrl
       }
+      console.log(docToInsert);
       //insert document into DB
       urlsCol.insert(docToInsert, (err, docs) => {
         if (err) throw err;
         console.log("INSERTED");
       });
+      
+      console.log(docToInsert);
       return docToInsert;
     }
     urlsCol.find({
@@ -70,7 +73,7 @@ exports.urlshorten = ((req, res) => {
       //if the document does exist return the object to the user
       if (doc[0]) {
         console.log("Doc exists");
-        res.send(exists(doc[0]));
+        res.send(doc[0]);
       } else {
         res.send(disexists(res.locals.urii));
       }
@@ -78,6 +81,7 @@ exports.urlshorten = ((req, res) => {
     });
   });
 });
+
 exports.redirect = ((req, res) => {
   //get current URL = included https instead of req.protocl as this mistakenly return http
 // included host instead of static address in case in case app name changes
