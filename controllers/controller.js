@@ -3,8 +3,12 @@ const MongoClient = require("mongodb").MongoClient;
 const assert = require("assert");
 const Hashids = require("hashids");
 exports.urlvalidate = ((req, res, next) => {
-  c
-  const urii =encodeURIComponent(req.originalUrl);
+  //const uriFirst = `https://${req.get('host')}`;
+  //console.log(uriFirst);
+  //const uriSecond = encodeURI(req.originalUrl);
+  
+   const urii = req.params[0];
+  //const urii = `${uriFirst}${uriSecond}`;
   
   const valid = validateURL.isWebUri(urii);
   res.locals.valid = valid;
