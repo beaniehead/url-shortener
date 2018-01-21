@@ -3,8 +3,10 @@ const MongoClient = require("mongodb").MongoClient;
 const assert = require("assert");
 const Hashids = require("hashids");
 exports.urlvalidate = ((req, res, next) => {
-  const urii = req.params[0];
-  const valid = validateURL.isHttpsUri(urii);
+  c
+  const urii =encodeURIComponent(req.originalUrl);
+  
+  const valid = validateURL.isWebUri(urii);
   res.locals.valid = valid;
   if (!valid) {
     res.send(`${urii} is an invalid URL`)
