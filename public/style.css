@@ -1,13 +1,15 @@
 .main {
-  max-width:100%;
+  width:100%;
   font-family: 'Roboto', sans-serif;
   display:grid;
-  grid-template-columns:1fr  ;
+  grid-template-columns:1fr;
   grid-template-rows:1fr 5fr;
   padding:20px;
 }
 
-.content {}
+.content {
+  width:500px;
+  }
 
 .url {
   font-size:1.1em;
