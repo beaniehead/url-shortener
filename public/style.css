@@ -1,28 +1,25 @@
 .main {
-  width:100%;
   font-family: 'Roboto', sans-serif;
   display:grid;
-  grid-template-columns:1fr;
+  grid-template-columns:minmax(100px,1fr);
   grid-template-rows:1fr 5fr;
-  padding:20px;
+  margin:20px;
 }
-
-.content {
-  width:100vh;
-  }
-
-
-
 
 
 .url {
     font-size:1.1em;
   padding:5px;
+  border:1px solid gray;
+  border-radius:3px;
 }
 
 p, code{
-  
  overflow-wrap: break-word;
   word-wrap: break-word;
+}
+
+code {
+font-size:1.1em;
 }
 
