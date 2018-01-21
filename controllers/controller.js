@@ -84,6 +84,8 @@ exports.urlshorten = ((req, res) => {
   });
 });
 
+// Need to prevent DB connection
+
 exports.redirect = ((req, res) => {
   //get current URL = included https instead of req.protocl as this mistakenly return http
 // included host instead of static address in case in case app name changes
@@ -107,7 +109,7 @@ exports.redirect = ((req, res) => {
       }
     }).toArray((err, doc) => {
       if (err) throw err;
-      if (doc) {
+      if (doc[0]) {
         const redirectURL = doc[0].oldUrl;
        res.redirect(redirectURL);
 
