@@ -49,15 +49,18 @@ exports.urlshorten = ((req, res) => {
         oldUrl: uri,
         newUrl
       }
-      console.log(docToInsert);
+
       //insert document into DB
       urlsCol.insert(docToInsert, (err, docs) => {
         if (err) throw err;
         console.log("INSERTED");
       });
       
-      console.log(docToInsert);
-      return docToInsert;
+      console.log(docToInsert.oldUrl);
+      return ({
+        oldUrl: uri,
+        newUrl
+      });
     }
     urlsCol.find({
       oldUrl: {
@@ -69,7 +72,6 @@ exports.urlshorten = ((req, res) => {
       }
     }).toArray((err, doc) => {
       if (err) throw err;
-      console.log(doc);
       //if the document does exist return the object to the user
       if (doc[0]) {
         console.log("Doc exists");
@@ -114,6 +116,4 @@ exports.redirect = ((req, res) => {
       db.close();
     });
   });
-  
-  // res.redirect("https:www.foo");
 });
