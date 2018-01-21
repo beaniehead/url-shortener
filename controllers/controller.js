@@ -75,16 +75,16 @@ exports.urlshorten = ((req, res) => {
       //if the document does exist return the object to the user
       if (doc[0]) {
         console.log("Doc exists");
-        res.send(doc[0]);
+        res.json(doc[0]);
       } else {
-        res.send(disexists(res.locals.urii));
+        res.json(disexists(res.locals.urii));
       }
       db.close();
     });
   });
 });
 
-// Need to prevent DB connection
+// Need to prevent DB connection when going to home page
 
 exports.redirect = ((req, res) => {
   //get current URL = included https instead of req.protocl as this mistakenly return http
@@ -112,8 +112,6 @@ exports.redirect = ((req, res) => {
       if (doc[0]) {
         const redirectURL = doc[0].oldUrl;
        res.redirect(redirectURL);
-
-        console.log(doc[0])
       }
       db.close();
     });
