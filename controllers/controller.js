@@ -91,22 +91,19 @@ exports.redirect = ((req, res) => {
     }, {
       projection: {
         _id: 0,
-        oldUrl:0
+        newUrl:0
       }
     }).toArray((err, doc) => {
       if (err) throw err;
       if (doc) {
-        const redirectURL = doc[0].newUrl;
-      // res.redirect(doc[0]);
+        const redirectURL = doc[0].oldUrl;
+       res.redirect(redirectURL);
 
         console.log(doc[0])
       }
       db.close();
     });
   });
-  //find document which newUrl matches the newUrl
-  //if document matches, return oldUrl from document
-  //redirect to this documnet
-  //if no match, close db connection and display 404 etc on page
-  res.send(newUrl);
+  
+  // res.redirect("https:www.foo");
 });
