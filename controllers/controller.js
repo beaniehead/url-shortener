@@ -103,14 +103,17 @@ exports.redirect = ((req, res) => {
         newUrl: 0
       }
     }).toArray((err, doc) => {
-      console.log(doc);
+      
       if (err) throw err;
       if(!doc.length){
-      console.log(docume
+      console.log("Doc doesn't exist");
+        res.status(404);
+        //render 404 page as this is a page users will actually visit
+        res.sendFile(process.cwd() + "/views/404.html");
       }
       else 
        {
-        console.log(true);
+        
         const redirectURL = doc[0].oldUrl;
         res.redirect(redirectURL);
       }

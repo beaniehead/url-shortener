@@ -10,6 +10,6 @@ res.sendFile(process.cwd() + "/views/index.html");
 
 router.get("/new/*", controller.urlvalidate, controller.urlshorten);
 
-router.get("/a", controller.redirect);
+router.get("/*", controller.redirect);
 
 module.exports = router;

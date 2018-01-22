@@ -1,5 +1,9 @@
-.main {
+body {
+
   font-family: 'Roboto', sans-serif;
+}
+
+.main {
   display:grid;
   grid-template-columns:minmax(200px, max-content);
   grid-template-rows:1fr 5fr;
