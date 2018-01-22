@@ -13,7 +13,7 @@ exports.urlvalidate = ((req, res, next) => {
   const valid = validateURL.isWebUri(uriSecond);
   res.locals.valid = valid;
   if (!valid) {
-    res.send(`${uriSecond} is an invalid URL`)
+    res.json({error:`${uriSecond} is an invalid URL`});
   } else {
     res.locals.urii = uriSecond;
     next();
