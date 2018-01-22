@@ -103,8 +103,14 @@ exports.redirect = ((req, res) => {
         newUrl: 0
       }
     }).toArray((err, doc) => {
+      console.log(doc);
       if (err) throw err;
-      if (doc[0]) {
+      if(!doc.length){
+      console.log(docume
+      }
+      else 
+       {
+        console.log(true);
         const redirectURL = doc[0].oldUrl;
         res.redirect(redirectURL);
       }
