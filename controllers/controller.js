@@ -2,14 +2,14 @@ const validateURL = require("valid-url");
 const MongoClient = require("mongodb").MongoClient;
 const assert = require("assert");
 const Hashids = require("hashids");
+
 exports.urlvalidate = ((req, res, next) => {
   const uriFirst = `https://${req.get('host')}/new/`;
   console.log(uriFirst);
   const uriSecond = req.originalUrl.slice(5);
   console.log(uriSecond);
-   //const urii = req.params[0];
+  //const urii = req.params[0];
   const urii = `${uriFirst}${uriSecond}`;
-  
   const valid = validateURL.isWebUri(uriSecond);
   res.locals.valid = valid;
   if (!valid) {
@@ -19,6 +19,7 @@ exports.urlvalidate = ((req, res, next) => {
     next();
   }
 });
+
 exports.urlshorten = ((req, res) => {
   const url = process.env.DATABASE;
   // Connect to DB
@@ -32,12 +33,10 @@ exports.urlshorten = ((req, res) => {
       const hashids = new Hashids();
       return hashids.encode(id);
     };
-
     function exists(doc) {
       //return document to user
       return doc;
     };
-
     function disexists(uri) {
       //const base = "https://shorts.glitch.me/";
       const base = `https://${req.get('host')}/`;
@@ -49,13 +48,11 @@ exports.urlshorten = ((req, res) => {
         oldUrl: uri,
         newUrl
       }
-
       //insert document into DB
       urlsCol.insert(docToInsert, (err, docs) => {
         if (err) throw err;
         console.log("INSERTED");
       });
-      
       console.log(docToInsert.oldUrl);
       return ({
         oldUrl: uri,
@@ -85,12 +82,10 @@ exports.urlshorten = ((req, res) => {
 });
 
 // Need to prevent DB connection when going to home page
-
 exports.redirect = ((req, res) => {
   //get current URL = included https instead of req.protocl as this mistakenly return http
-// included host instead of static address in case in case app name changes
+  // included host instead of static address in case in case app name changes
   const newUrl = `https://${req.get('host')}${req.originalUrl}`;
-
   const url = process.env.DATABASE;
   //connect to Database
   MongoClient.connect(url, (err, db) => {
@@ -98,20 +93,20 @@ exports.redirect = ((req, res) => {
     console.log("Connected");
     const dbo = db.db("url-shortener");
     const urlsCol = dbo.collection("urls");
-   urlsCol.find({
+    urlsCol.find({
       newUrl: {
         $eq: newUrl
       }
     }, {
       projection: {
         _id: 0,
-        newUrl:0
+        newUrl: 0
       }
     }).toArray((err, doc) => {
       if (err) throw err;
       if (doc[0]) {
         const redirectURL = doc[0].oldUrl;
-       res.redirect(redirectURL);
+        res.redirect(redirectURL);
       }
       db.close();
     });
