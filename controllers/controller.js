@@ -5,7 +5,6 @@ const Hashids = require("hashids");
 
 exports.urlvalidate = ((req, res, next) => {
   const uriFirst = `https://${req.get('host')}/new/`;
-  consoel.log(req.originalUrl.)
   const uriSecond = req.originalUrl.slice(5);
   const urii = `${uriFirst}${uriSecond}`;
   const valid = validateURL.isWebUri(uriSecond);
