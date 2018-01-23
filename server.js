@@ -8,7 +8,7 @@ const routes = require('./routes/index.js');
 
 const app = express();
 
-require('dotenv').config({ path: 'variables.env' });
+require('dotenv').config();
 
 
 
