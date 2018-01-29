@@ -94,23 +94,27 @@ exports.urlshorten = ((req, res) => {
   });
 });
 
-// Need to prevent DB connection when going to home page
+// Redirects user when a shortened URL is navigated to 
 exports.redirect = ((req, res) => {
   //get current URL = included https instead of req.protocl as this mistakenly return http
   // included host instead of static address in case in case app name changes
   const newUrl = `https://${req.get('host')}${req.originalUrl}`;
+  // Databse connection url
   const url = process.env.DATABASE;
   //connect to Database
   MongoClient.connect(url, (err, db) => {
     if (err) throw err;
-    console.log("Connected");
+    // Variable to access url shortener databse
     const dbo = db.db("url-shortener");
+    // Variable for urls collection
     const urlsCol = dbo.collection("urls");
+    // find entered url in db4
     urlsCol.find({
       newUrl: {
         $eq: newUrl
       }
     }, {
+      //only return original URL
       projection: {
         _id: 0,
         newUrl: 0
@@ -118,15 +122,14 @@ exports.redirect = ((req, res) => {
     }).toArray((err, doc) => {
       
       if (err) throw err;
+      // If doc doesn't exist
       if(!doc.length){
       console.log("Doc doesn't exist");
         res.status(404);
         //render 404 page as this is a page users will actually visit
         res.sendFile(process.cwd() + "/views/404.html");
-      }
-      else 
-       {
-        
+      } else { 
+        //redirect users to original URL retrieved from DB
         const redirectURL = doc[0].oldUrl;
         res.redirect(redirectURL);
       }
