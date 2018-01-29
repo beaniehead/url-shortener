@@ -48,14 +48,15 @@ exports.urlshorten = ((req, res) => {
       //return document to user
       return doc;
     };
-    
+    // Function to generate shortened URL and add to DB
     function disexists(uri) {
-      //const base = "https://shorts.glitch.me/";
+// Base of URL
       const base = `https://${req.get('host')}/`;
-      //create hash as suffix for new url
+      //create hash as suffix for new url based on UNIX timestamp
       const suffix = createHash(Date.now());
+      // Shortened URL string
       const newUrl = `${base}${suffix}`;
-      //create new document
+      //create new document which contains new URL and old URL
       const docToInsert = {
         oldUrl: uri,
         newUrl
@@ -63,7 +64,6 @@ exports.urlshorten = ((req, res) => {
       // insert document into DB
       urlsCol.insert(docToInsert, (err, docs) => {
         if (err) throw err;
-        console.log("INSERTED");
       });
       return ({
         oldUrl: uri,
@@ -82,9 +82,10 @@ exports.urlshorten = ((req, res) => {
       }
     }).toArray((err, doc) => {
       if (err) throw err;
-      //if the document does exist return the object to the user
+      // If the document does exist return the object to the user, showing both the original URl and the new shortened URL
       if (doc[0]) {
         res.json(doc[0]);
+        // If the document does not exist, then run disexists function, passing the original url as an argument to generate a new database entry
       } else {
         res.json(disexists(res.locals.urii));
       }
