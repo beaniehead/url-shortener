@@ -37,18 +37,18 @@ exports.urlshorten = ((req, res) => {
     const dbo = db.db("url-shortener");
     // Assign const to access urls collection
     const urlsCol = dbo.collection("urls");
-    // Function to create unique hashid based on tim
+    // Function to create unique hashid based on timestamp of request (id)
     function createHash(id) {
       const hashids = new Hashids();
       return hashids.encode(id);
     };
     // Check to see if entered url exists in database
-    
-    
+        
     function exists(doc) {
       //return document to user
       return doc;
     };
+    
     function disexists(uri) {
       //const base = "https://shorts.glitch.me/";
       const base = `https://${req.get('host')}/`;
@@ -60,22 +60,23 @@ exports.urlshorten = ((req, res) => {
         oldUrl: uri,
         newUrl
       }
-      //insert document into DB
+      // insert document into DB
       urlsCol.insert(docToInsert, (err, docs) => {
         if (err) throw err;
         console.log("INSERTED");
       });
-      console.log(docToInsert.oldUrl);
       return ({
         oldUrl: uri,
         newUrl
       });
     }
+    // Query DB to find the original URL the user entered
     urlsCol.find({
       oldUrl: {
         $eq: res.locals.urii
       }
     }, {
+      // Do not return the id of the document
       projection: {
         _id: 0
       }
