@@ -9,32 +9,42 @@ exports.urlvalidate = ((req, res, next) => {
   // Grabs the first element of the URL - up to 'new/'
   const uriFirst = `https://${req.get('host')}/new/`;
   // Grabs the second half of the URL (the URL query);
-  // const uriSecond = req.originalUrl.slice(5);
-  const uriSecond = req.query.url;
-  const urii = `${uriFirst}${uriSecond}`;
+  const uriSecond = req.originalUrl.slice(5);
+  // Combines two elements of URL into new URL - NOT NEEDED
+  // const urii = `${uriFirst}${uriSecond}`;
+  // Validates the URL the user wants to shorten
   const valid = validateURL.isWebUri(uriSecond);
-  res.locals.valid = valid;
   if (!valid) {
+    // If valid is not true, then return an error
     res.json({error:`${uriSecond} is an invalid URL`});
   } else {
+    // If url is valid, then assign uriSecond to res.locals variable so it can be accessed in next function
     res.locals.urii = uriSecond;
+  // Move to next function
     next();
   }
 });
 
+// Function to shorten URL and save to database (or return shortened URL if it has previouslty been shortened and stored in DB)
 exports.urlshorten = ((req, res) => {
+  // URL for databse
   const url = process.env.DATABASE;
   // Connect to DB
   MongoClient.connect(url, (err, db) => {
     if (err) throw err;
     console.log("Successfully connected to db");
+    // Access url shortener DB
     const dbo = db.db("url-shortener");
+    // Assign const to access urls collection
     const urlsCol = dbo.collection("urls");
-    // Check to see if entered url exists in database
+    // Function to create unique hashid based on tim
     function createHash(id) {
       const hashids = new Hashids();
       return hashids.encode(id);
     };
+    // Check to see if entered url exists in database
+    
+    
     function exists(doc) {
       //return document to user
       return doc;
@@ -73,7 +83,6 @@ exports.urlshorten = ((req, res) => {
       if (err) throw err;
       //if the document does exist return the object to the user
       if (doc[0]) {
-        console.log("Doc exists");
         res.json(doc[0]);
       } else {
         res.json(disexists(res.locals.urii));
