@@ -25,6 +25,8 @@ if (!process.env.DISABLE_XORIGIN) {
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
+
+// for all requests use routes defined in router/index.js
 app.use('/', routes);
 
 // Respond not found to all the wrong routes
