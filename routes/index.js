@@ -8,7 +8,7 @@ router.get("/", (req,res)=>{
 res.sendFile(process.cwd() + "/views/index.html");
 });
 
-router.get("/new/*", controller.urlvalidate, controller.urlshorten);
+router.get("/new/:url", controller.urlvalidate, controller.urlshorten);
 
 router.get("/*", controller.redirect);
 
