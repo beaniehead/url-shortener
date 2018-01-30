@@ -8,22 +8,14 @@ const Hashids = require("hashids");
 exports.urlvalidate = ((req, res, next) => {
   // Grabs the first element of the URL - up to 'new/'
   const uriFirst = `https://${req.get('host')}/new/`;
-<<<<<<< HEAD
   // Grabs the second half of the URL (the URL query);
   const uriSecond = req.originalUrl.slice(5);
   // Combines two elements of URL into new URL - NOT NEEDED
-  // const urii = `${uriFirst}${uriSecond}`;
   // Validates the URL the user wants to shorten
-=======
-  const uriSecond = req.originalUrl.slice(5);
   const urii = `${uriFirst}${uriSecond}`;
->>>>>>> 241d69e7e6e7ea28ddb9e500eb6e9101cc5e98fd
   const valid = validateURL.isWebUri(uriSecond);
   if (!valid) {
-<<<<<<< HEAD
     // If valid is not true, then return an error
-=======
->>>>>>> 241d69e7e6e7ea28ddb9e500eb6e9101cc5e98fd
     res.json({error:`${uriSecond} is an invalid URL`});
   } else {
     // If url is valid, then assign uriSecond to res.locals variable so it can be accessed in next function

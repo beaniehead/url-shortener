@@ -9,11 +9,6 @@ const routes = require('./routes/index.js');
 const app = express();
 
 require('dotenv').config();
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 241d69e7e6e7ea28ddb9e500eb6e9101cc5e98fd
 
 if (!process.env.DISABLE_XORIGIN) {
   app.use((req, res, next)=> {
